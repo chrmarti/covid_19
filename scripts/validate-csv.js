@@ -59,6 +59,18 @@ const validateSequentially = async csvFiles => {
         }
 
         //check the cumulative fields
+        var last = {};
+        parsed.forEach(function (item, index) {
+            cumulativeFields.forEach(function(col, col_idx) {
+                if (col in last && last[col] && item[col] && parseInt(item[col]) < parseInt(last[col])) {
+                    throw new Error(`Row ${index+1}: cumulative field ${col}: ${item[col]} < ${last[col]}`);
+                }
+                if (item[col]) {
+                    last[col] = item[col];
+                }
+            });
+        });
+
         
 
 
